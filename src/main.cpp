@@ -1,15 +1,27 @@
-#include <unistd.h>
 #include <iostream>
-#include "producer.hpp"
+#include "value.hpp"
 
 int main()
 {
-    lyza::json::producer p = lyza::json::producer::from_string("salut");
+	lyza::json::value v;
+	lyza::json::object o;
+	lyza::json::value::number n = 10.2;
+	lyza::json::value::array a;
+	lyza::json::value vv;
 
-    while (!p.eof()) {
-        std::cout << static_cast<int>(p.peekc()) << ":";
-        std::cout << p.nextc() << std::endl;
-    }
+	a.push_back(10.2);
+	a.push_back(std::string("salut"));
+	a.push_back(std::string("café"));
+	a.push_back(true);
+	a.push_back(false);
+
+	v = a;
+
+	o["salut"] = n;
+	o["omg"] = a;
+	v = o;
+
+	std::cout << v.to_string() << std::endl;
 
     return 0;
 }
