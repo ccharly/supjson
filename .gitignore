@@ -26,3 +26,11 @@
 *.exe
 *.out
 *.app
+lyza.json
+
+# Build
+.build
+.depend
+
+# Vim
+*.sw*
