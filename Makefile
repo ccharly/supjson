@@ -10,7 +10,11 @@ DEPS=$(addprefix ${BUILD_DIR}/,$(patsubst %.cpp,%.d,$(SRCS)))
 
 # Compiler setup
 CXX=clang++
-CXX_FLAGS=-std=c++0x
+CXX_FLAGS=-std=c++11
+INC_FLAGS=-I src/
+
+# DO NOT EDIT
+CXX_FLAGS+=$(INC_FLAGS)
 
 # Linker setup
 LDD_FLAGS=
@@ -33,7 +37,7 @@ $(BUILD_DIR)/%.o: %.cpp
 
 $(BUILD_DIR)/%.d: %.cpp
 	@mkdir -p `dirname $@`
-	$(CXX) -MM $< | sed 's#.*\.o:#$(patsubst %.d,%.o,$@):#g' > $@
+	$(CXX) -MM $(CXX_FLAGS) $< | sed 's#.*\.o:#$(patsubst %.d,%.o,$@):#g' > $@
 
 .depend: $(DEPS)
 	cat $(DEPS) > .depend
