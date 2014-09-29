@@ -3,6 +3,7 @@
 
 # include <istream>
 # include <sstream>
+# include <fstream>
 # include <stdexcept>
 
 namespace lyza { namespace json {
@@ -23,12 +24,12 @@ namespace lyza { namespace json {
         public:
             static basic_producer from_file(std::string const& f)
             {
-                return basic_producer(new istream(f));
+                return basic_producer(new std::ifstream(f, std::ifstream::in));
             }
 
             static basic_producer from_string(std::string const& f)
             {
-                return basic_producer(new istringstream(f));
+                return basic_producer(new std::istringstream(f));
             }
 
         // You can only construct a fresh new producer using the helpers
