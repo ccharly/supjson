@@ -13,9 +13,7 @@ int main()
 		return 1;
 	}
 
-	lj::value val;
-
-   	val = lj::parser::parse(p);
+	lj::value val = lj::parser::parse(p);
 
 	std::cout << val.to_string() << std::endl;
 

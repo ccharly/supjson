@@ -25,17 +25,6 @@ class value {
 		{
 		}
 
-		template <typename T>
-		value(T const& t)
-			: var_(t)
-		{
-		}
-
-		value(value const& v)
-			: var_(v.var_)
-		{
-		}
-
 	private:
 		struct string_visitor {
 			typedef std::string ret_type;
@@ -101,51 +90,60 @@ class value {
 		};
 
 	public:
-		value& operator=(std::string const& s)
+# define DEF_CTOR(T)\
+		value(T const& t) : var_(t) { }\
+		value(T&& t) : var_(std::move(t)) { }
+
+		DEF_CTOR(null)
+		DEF_CTOR(array)
+		DEF_CTOR(string)
+		DEF_CTOR(object)
+
+		value(int i) : var_(static_cast<number>(i)) { }
+		value(number d) : var_(d) { }
+		value(boolean b) : var_(b) { }
+
+		value(value const& v)
+			: var_(v.var_)
 		{
-			var_ = s;
-			return *this;
 		}
+
+		value(value&& v)
+			: var_(std::move(v.var_))
+		{
+		}
+
+	public:
+# define DEF_OP(T)\
+		value& operator=(T const& t) { var_ = t; return *this; }\
+		value& operator=(T&& t) { var_ = std::move(t); return *this; }
+
+		DEF_OP(null)
+		DEF_OP(array)
+		DEF_OP(string)
+		DEF_OP(object)
 
 		value& operator=(int i)
 		{
-			var_ = static_cast<double>(i);
+			var_ = static_cast<number>(i);
 			return *this;
 		}
 
-		value& operator=(double d)
+		value& operator=(number d)
 		{
 			var_ = d;
-			return *this;
-		}
-
-		value& operator=(null&& n)
-		{
-			var_ = n;
-			return *this;
-		}
-
-		value& operator=(const null& n)
-		{
-			var_ = n;
-			return *this;
-		}
-
-		value& operator=(object const& o)
-		{
-			var_ = o;
-			return *this;
-		}
-
-		value& operator=(array const& a)
-		{
-			var_ = a;
 			return *this;
 		}
 
 		value& operator=(value const& v)
 		{
 			var_ = v.var_;
+			return *this;
+		}
+
+		value& operator=(value&& v)
+		{
+			var_ = std::move(v.var_);
 			return *this;
 		}
 
