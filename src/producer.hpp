@@ -61,13 +61,27 @@ namespace lyza { namespace json {
 			}
 
         private:
+            T getc__()
+            {
+				char c = 0;
+				
+				if (skip_ws_)
+					do {
+						*is_ >> c;
+					} while (c == ' ' || c == '\t' || c == '\n');
+				else
+					*is_ >> std::noskipws >> c;
+
+                return c;
+            }
+
             T peekc__()
             {
                 T c;
                 if (has_peeked_) {
                     c = peeked_;
                 } else {
-                    *is_ >> c;
+					c = getc__();
                     peeked_ = c;
                     has_peeked_ = true;
                 }
@@ -75,6 +89,10 @@ namespace lyza { namespace json {
             }
 
         public:
+			void skip_ws(bool skip)
+			{
+				skip_ws_ = skip;
+			}
 
             // Returns the current read character
             T peekc()
@@ -98,7 +116,7 @@ namespace lyza { namespace json {
                     has_peeked_ = false;
                     c = peeked_;
                 } else {
-                    *is_ >> c;
+					c = getc__();
                 }
                 return c;
             }
@@ -125,6 +143,7 @@ namespace lyza { namespace json {
             istream* is_;
             T peeked_; // FIXME could be replaced by an optional type
             bool has_peeked_;
+			bool skip_ws_;
     };
 
     // Typedefs
