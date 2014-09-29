@@ -103,6 +103,11 @@ class value {
 		value(number d) : var_(d) { }
 		value(boolean b) : var_(b) { }
 
+		value(const char* s)
+			: var_(string(s))
+		{
+		}
+
 		value(value const& v)
 			: var_(v.var_)
 		{
@@ -132,6 +137,12 @@ class value {
 		value& operator=(number d)
 		{
 			var_ = d;
+			return *this;
+		}
+
+		value& operator=(const char* s)
+		{
+			var_ = string(s);
 			return *this;
 		}
 
