@@ -26,6 +26,7 @@ class variant {
 				type& afield = a.unsafe_get<type>();
 				new (&afield) type();
 				afield = b.unsafe_get<type>();
+				a.tag_ = b.tag_;
             } else {
                 deduce_copy<Tn - 1, Tdummy>::copy(n, a, b);
             }
@@ -42,6 +43,7 @@ class variant {
 				type& afield = a.unsafe_get<type>();
 				new (&afield) type();
 				afield = b.unsafe_get<type>();
+				a.tag_ = b.tag_;
             }
         }
     };
