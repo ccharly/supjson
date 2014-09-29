@@ -1,0 +1,11 @@
+{
+	"key":[
+		"value\ lol dawdaw a adwa",
+		"lol",
+		"a",
+		true,
+		false,
+		{"lol":"a", "b": true},
+		12.4E-2
+	]
+}

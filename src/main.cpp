@@ -1,27 +1,24 @@
 #include <iostream>
 #include "value.hpp"
+#include "producer.hpp"
+#include "parser.hpp"
+
+namespace lj = lyza::json;
 
 int main()
 {
-	lyza::json::value v;
-	lyza::json::object o;
-	lyza::json::value::number n = 10.2;
-	lyza::json::value::array a;
-	lyza::json::value vv;
+	lj::producer p = lj::producer::from_file("data.json");
 
-	a.push_back(10.2);
-	a.push_back(std::string("salut"));
-	a.push_back(std::string("café"));
-	a.push_back(true);
-	a.push_back(false);
+	if (!p.good()) {
+		return 1;
+	}
 
-	v = a;
+	lj::value val;
 
-	o["salut"] = n;
-	o["omg"] = a;
-	v = o;
+   	val = lj::parser::parse(p);
 
-	std::cout << v.to_string() << std::endl;
+	std::cout << val.to_string() << std::endl;
+
 
     return 0;
 }
