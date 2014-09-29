@@ -13,6 +13,7 @@ namespace lyza { namespace json {
 class value {
 	public:
 		class null {};
+		typedef bool boolean;
 		typedef double number;
 		typedef std::string string;
 		typedef std::vector<value> array;
@@ -175,6 +176,11 @@ class value {
 };
 
 typedef value::object object;
+typedef value::boolean boolean;
+typedef value::string string;
+typedef value::number number;
+typedef value::array array;
+typedef value::null null;
 
 }}
 
