@@ -54,6 +54,12 @@ namespace lyza { namespace json {
                     delete is_;
             }
 
+		public:
+			bool good() const
+			{
+				return is_->good();
+			}
+
         private:
             T peekc__()
             {
