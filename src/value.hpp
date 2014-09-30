@@ -6,6 +6,7 @@
 # include <vector>
 # include <sstream>
 
+# include "defines.hpp"
 # include "fct/variant.hpp"
 
 namespace lyza { namespace json {
