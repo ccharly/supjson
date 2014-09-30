@@ -89,7 +89,7 @@ lj::string parse_string(lj::producer& p)
 
 lj::boolean parse_bool(lj::producer& p)
 {
-	lj::boolean b;
+	lj::boolean b = false;
 
 	if (has(p, 't')) {
 		match_string(p, "true");
