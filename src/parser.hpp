@@ -4,11 +4,21 @@
 # include <istream>
 # include <sstream>
 # include <stdexcept>
+# include <locale>
 # include <cmath>
 
 # include "value.hpp"
 
 namespace lyza { namespace json { namespace parser {
+
+namespace {
+	bool isdigit(char c)
+	{
+		// TODO Should we instanciate the locate every times ?
+		static std::locale loc;
+		return std::isdigit(c, loc);
+	}
+}
 
 namespace lj = lyza::json;
 
@@ -184,7 +194,7 @@ lj::number parse_number(lj::producer& p)
 		} else {
 			error(p, "expected number");
 		}
-		while (std::isdigit(p.peekc())) {
+		while (isdigit(p.peekc())) {
 			num += p.nextc();
 		}
 	}
@@ -193,13 +203,13 @@ lj::number parse_number(lj::producer& p)
 		num += p.nextc();
 	}
 
-	if (std::isdigit(p.peekc())) {
+	if (isdigit(p.peekc())) {
 		num += p.nextc();
 	} else {
 		error(p, "expected number");
 	}
 
-	while (std::isdigit(p.peekc())) {
+	while (isdigit(p.peekc())) {
 		num += p.nextc();
 	}
 
@@ -214,7 +224,7 @@ lj::number parse_number(lj::producer& p)
 		}
 
 		std::string exp;
-		while (std::isdigit(p.peekc())) {
+		while (isdigit(p.peekc())) {
 			exp += p.nextc();
 		}
 
@@ -241,7 +251,7 @@ lj::value parse_value(lj::producer& p)
 		val = parse_bool(p);
 	} else if (has(p, 'n')) {
 		val = parse_null(p);
-	} else if (has(p, '-') || std::isdigit(p.peekc())) {
+	} else if (has(p, '-') || isdigit(p.peekc())) {
 		val = parse_number(p);
 	} else {
 		error(p, "expected value");
