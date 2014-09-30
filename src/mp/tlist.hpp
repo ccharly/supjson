@@ -16,6 +16,7 @@ struct tlist {
     typedef Ttl tl;
 };
 
+# ifndef NO_VTEMPLATES
 template <typename Thd, typename ...Ttl>
 struct make_tlist__ {
     typedef tlist< Thd, typename make_tlist__<Ttl...>::type > type;
@@ -32,6 +33,7 @@ struct make_tlist {
         typename make_tlist__<Ttl..., null>::type
         type;
 };
+#endif
 
 template <typename TL, typename Tmatcher>
 struct find {
