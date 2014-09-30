@@ -62,7 +62,7 @@ struct find_count {
 
 template <typename Tunused>
 struct find_count<null, Tunused> {
-    enum { value = 0 };
+    enum { value = -1 };
 };
 
 template <typename TL, typename Tpred>

@@ -293,6 +293,7 @@ class variant {
     public:
         template <typename T>
         struct tag {
+			// TODO, check if find_count failed
             enum { value = lyza::mp::find_count<tlist__, type_matcher<T> >::value };
         };
 
@@ -302,6 +303,7 @@ class variant {
         : public
           lyza::mp::union_nth<
                 union__,
+				// TODO, check if find_count failed
                 lyza::mp::find_count<tlist__, type_matcher<typename std::remove_reference<T>::type> >::value
           > {};
 
