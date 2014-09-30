@@ -3,6 +3,8 @@
 
 # if (_MSC_VER <= 1700)
 #  define NO_VTEMPLATES
+#  define NO_UNRESTRICTED_UNIONS
 # endif
+
 
 #endif

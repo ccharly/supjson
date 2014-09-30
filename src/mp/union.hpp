@@ -9,7 +9,13 @@ namespace lyza { namespace mp {
 # ifdef NO_VTEMPLATES
 template <typename TL>
 struct make_union__ {
+# ifdef NO_UNRESTRICTED_UNIONS
+	// FIXME quick and dirty fix because MSVC does not allow
+	// other type than POD type in unions
+    typedef struct U {
+# else
     typedef union U {
+# endif
         U() : hd() {}
         ~U() {}
 
