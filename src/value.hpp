@@ -63,7 +63,7 @@ class value {
 						acc += ",";
 					else
 						first = false;
-					acc += it.to_string();
+					acc += to_string(it);
 				}
 				acc += "]";
 
@@ -81,7 +81,7 @@ class value {
 						acc += ",";
 					else
 						first = false;
-					acc += "\"" + it.first + "\"" + ":" + it.second.to_string();
+					acc += "\"" + it.first + "\"" + ":" + to_string(it.second);
 				}
 				acc += "}";
 
@@ -158,17 +158,25 @@ class value {
 			return *this;
 		}
 
-	public:
-		std::string to_string() const
+	private:
+		static string_visitor& get_visitor()
 		{
-			return var_.apply_visitor(string_visitor());
+			static string_visitor v;
+			return v;
 		}
 
+	public:
 		static std::string to_string(value const& v)
 		{
-			return v.var_.apply_visitor(string_visitor());
+			return v.var_.apply_visitor(get_visitor());
 		}
-	
+
+		template <typename T>
+		static std::string to_string(T const& v)
+		{
+			return get_visitor()(v);
+		}
+
 	public:
 		typedef
 			functional::variant<
