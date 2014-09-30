@@ -1,7 +1,7 @@
 #ifndef LYZA_FUNCTIONAL_VARIANT__
 # define LYZA_FUNCTIONAL_VARIANT__
 
-# include <exception>
+# include <stdexcept>
 # include <tuple>
 # include <typeinfo>
 # include <type_traits>
