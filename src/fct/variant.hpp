@@ -87,21 +87,11 @@ class variant {
         }
 
         template <typename T>
-        variant(T& t)
-            : tag_(tag<T>::value), v_()
-        {
-			T& field = mp_union<T>::get(v_);
-			new (&field) T();
-
-            field = t;
-        }
-
-        template <typename T>
         variant(T&& t)
             : tag_(tag<T>::value), v_()
         {
 			T& field = mp_union<T>::get(v_);
-			new (&field) T();
+			new (&field) typename std::remove_reference<T>::type();
 
             field = std::move(t);
         }
@@ -111,15 +101,9 @@ class variant {
             : tag_(tag<T>::value), v_()
         {
 			T& field = mp_union<T>::get(v_);
-			new (&field) T();
+			new (&field) typename std::remove_reference<T>::type();
 
             field = t;
-        }
-
-        variant(variant& v)
-            : tag_(v.tag_), v_()
-        {
-            copy(v);
         }
 
         variant(variant const& v)
@@ -135,21 +119,10 @@ class variant {
         }
 
         template <typename T>
-        variant& operator=(T& t)
-        {
-			T& field = mp_union<T>::get(v_);
-			new (&field) T();
-
-            field = t;
-            tag_ = tag<T>::value;
-            return *this;
-        }
-
-        template <typename T>
         variant& operator=(T&& t)
         {
 			T& field = mp_union<T>::get(v_);
-			new (&field) T();
+			new (&field) typename std::remove_reference<T>::type();
 
             field = std::move(t);
             tag_ = tag<T>::value;
@@ -160,7 +133,7 @@ class variant {
         variant& operator=(T const& t)
         {
 			T& field = mp_union<T>::get(v_);
-			new (&field) T();
+			new (&field) typename std::remove_reference<T>::type();
 
             field = t;
             tag_ = tag<T>::value;
@@ -168,12 +141,6 @@ class variant {
         }
 
         variant& operator=(variant&& v)
-        {
-			copy(v);
-            return *this;
-        }
-
-        variant& operator=(variant& v)
         {
 			copy(v);
             return *this;
@@ -323,7 +290,7 @@ class variant {
         : public
           lyza::mp::union_nth<
                 union__,
-                lyza::mp::find_count<tlist__, type_matcher<T> >::value
+                lyza::mp::find_count<tlist__, type_matcher<typename std::remove_reference<T>::type> >::value
           > {};
 
     public:
