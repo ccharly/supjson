@@ -223,7 +223,7 @@ lj::number parse_number(lj::producer& p)
 		dnum = dnum * dexp;
 	}
 
-	return dnum;
+	return neg ? -dnum : dnum;
 }
 
 lj::value parse_value(lj::producer& p)
