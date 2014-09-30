@@ -5,6 +5,7 @@
 # include <tuple>
 # include <typeinfo>
 # include <type_traits>
+# include <functional>
 # include <utility>
 
 # include "mp/union.hpp"
