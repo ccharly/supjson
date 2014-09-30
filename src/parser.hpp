@@ -5,6 +5,7 @@
 # include <sstream>
 # include <stdexcept>
 # include <cmath>
+# include <locale>
 
 # include "value.hpp"
 
@@ -184,7 +185,8 @@ lj::number parse_number(lj::producer& p)
 		} else {
 			error(p, "expected number");
 		}
-		while (std::isdigit(p.peekc())) {
+		std::locale loc;
+		while (std::isdigit(p.peekc(), loc)) {
 			num += p.nextc();
 		}
 	}
@@ -192,14 +194,14 @@ lj::number parse_number(lj::producer& p)
 	if (has(p, '.')) {
 		num += p.nextc();
 	}
-
-	if (std::isdigit(p.peekc())) {
+	std::locale loc;
+	if (std::isdigit(p.peekc(), loc)) {
 		num += p.nextc();
 	} else {
 		error(p, "expected number");
 	}
 
-	while (std::isdigit(p.peekc())) {
+	while (std::isdigit(p.peekc(), loc)) {
 		num += p.nextc();
 	}
 
@@ -213,8 +215,9 @@ lj::number parse_number(lj::producer& p)
 			op = p.nextc();
 		}
 
+		std::locale loc;
 		std::string exp;
-		while (std::isdigit(p.peekc())) {
+		while (std::isdigit(p.peekc(), loc)) {
 			exp += p.nextc();
 		}
 
@@ -230,6 +233,7 @@ lj::value parse_value(lj::producer& p)
 {
 	std::cout << "parse_value" << std::endl;
 	lj::value val;
+	std::locale loc;
 
 	if (has(p, '"')) {
 		val = parse_string(p);
@@ -241,7 +245,7 @@ lj::value parse_value(lj::producer& p)
 		val = parse_bool(p);
 	} else if (has(p, 'n')) {
 		val = parse_null(p);
-	} else if (has(p, '-') || std::isdigit(p.peekc())) {
+	} else if (has(p, '-') || std::isdigit(p.peekc(), loc)) {
 		val = parse_number(p);
 	} else {
 		error(p, "expected value");

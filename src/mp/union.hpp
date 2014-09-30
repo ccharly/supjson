@@ -9,7 +9,7 @@ namespace lyza { namespace mp {
 # ifdef NO_VTEMPLATES
 template <typename TL>
 struct make_union__ {
-    typedef union U {
+    typedef struct U {
         U() : hd() {}
         ~U() {}
 
