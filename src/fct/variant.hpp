@@ -88,7 +88,7 @@ class variant {
 
         template <typename T>
         variant(T&& t)
-            : tag_(tag<T>::value), v_()
+            : tag_(tag< typename std::remove_reference<T>::type >::value), v_()
         {
 			T& field = mp_union<T>::get(v_);
 			new (&field) typename std::remove_reference<T>::type();
