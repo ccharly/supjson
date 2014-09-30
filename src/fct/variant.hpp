@@ -15,7 +15,11 @@ namespace lyza { namespace functional {
 
 typedef void dummy;
 
+# ifdef NO_VTEMPLATES
+template <typename TL>
+# else
 template <typename ...Targs>
+# endif
 class variant {
     template <size_t Tn, typename Tdummy>
     struct deduce_copy {
@@ -193,6 +197,13 @@ class variant {
         }
 
     public:
+# ifdef NO_VTEMPLATES
+        typedef TL tlist__;
+
+        typedef
+            typename mp::make_union<TL>::type
+            union__;
+# else
         typedef
             typename mp::make_tlist<Targs...>::type
             tlist__;
@@ -200,6 +211,7 @@ class variant {
         typedef
             typename mp::make_union<Targs...>::type
             union__;
+# endif
 
         template <typename T>
         struct type_matcher {

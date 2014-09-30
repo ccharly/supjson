@@ -178,6 +178,24 @@ class value {
 		}
 
 	public:
+# ifdef NO_VTEMPLATES
+		typedef
+			functional::variant<
+				mp::tlist< null,
+				mp::tlist< std::vector<value>,
+				mp::tlist< bool,
+				mp::tlist< std::string,
+				mp::tlist< number,
+				mp::tlist< std::map<std::string, value>,
+				mp::null
+					>
+					>
+					>
+					>
+					>
+					>
+			> t;
+# else
 		typedef
 			functional::variant<
 				null,
@@ -187,6 +205,7 @@ class value {
 				number,
 				std::map<std::string, value>
 			> t;
+# endif
 
 	private:
 		t var_;
