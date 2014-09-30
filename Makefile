@@ -10,7 +10,7 @@ DEPS=$(addprefix ${BUILD_DIR}/,$(patsubst %.cpp,%.d,$(SRCS)))
 
 # Compiler setup
 CXX=clang++
-CXX_FLAGS=-std=c++11
+CXX_FLAGS=-std=c++11 -Wall
 INC_FLAGS=-I src/
 
 # DO NOT EDIT
