@@ -6,6 +6,8 @@
 # include <fstream>
 # include <stdexcept>
 
+# include "exceptions.hpp"
+
 namespace lyza { namespace json {
 
     /* A producer produces input. You can either peek the current byte (NOTE:
@@ -20,6 +22,9 @@ namespace lyza { namespace json {
             typedef std::basic_istream<T> istream;
             typedef std::basic_istringstream<T> istringstream;
 
+		private:
+			size_t line_, column_;
+
         // Helpers to construct a producer
         public:
             static basic_producer from_file(std::string const& f)
@@ -30,6 +35,11 @@ namespace lyza { namespace json {
             static basic_producer from_string(std::string const& f)
             {
                 return basic_producer(new std::istringstream(f));
+            }
+
+            static basic_producer from_streambuf(std::streambuf* sb)
+            {
+                return basic_producer(new std::istream(sb));
             }
 
         // You can only construct a fresh new producer using the helpers
@@ -64,13 +74,26 @@ namespace lyza { namespace json {
             T getc__()
             {
 				char c = 0;
-				
-				if (skip_ws_)
+
+				if (skip_ws_) {
 					do {
 						*is_ >> c;
+						if (c == '\n') {
+							line_ += 1;
+							column_ = 0;
+						} else {
+							column_ += 1;
+						}
 					} while (c == ' ' || c == '\t' || c == '\n');
-				else
+				} else {
 					*is_ >> std::noskipws >> c;
+					if (c == '\n') {
+						line_ += 1;
+						column_ = 0;
+					} else {
+						column_ += 1;
+					}
+				}
 
                 return c;
             }
@@ -89,6 +112,16 @@ namespace lyza { namespace json {
             }
 
         public:
+			size_t get_line() const
+			{
+				return line_;
+			}
+
+			size_t get_column() const
+			{
+				return column_;
+			}
+
 			void skip_ws(bool skip)
 			{
 				skip_ws_ = skip;
@@ -98,7 +131,7 @@ namespace lyza { namespace json {
             T peekc()
             {
                 if (eof()) {
-                    throw std::runtime_error("End_of_file");
+                    throw end_of_file();
                 }
 
                 return peekc__();
@@ -108,7 +141,7 @@ namespace lyza { namespace json {
             T nextc()
             {
                 if (eof()) {
-                    throw std::runtime_error("End_of_file");
+                    throw end_of_file();
                 }
 
                 T c;

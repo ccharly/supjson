@@ -8,9 +8,9 @@
 # include <functional>
 # include <utility>
 
-# include "defines.hpp"
-# include "mp/union.hpp"
-# include "mp/tlist.hpp"
+# include "../defines.hpp"
+# include "../mp/union.hpp"
+# include "../mp/tlist.hpp"
 
 namespace lyza { namespace functional {
 
@@ -103,7 +103,7 @@ class variant {
 
         template <typename T>
         variant(T const& t)
-            : tag_(tag<T>::value), v_()
+            : tag_(tag< typename std::remove_reference<T>::type >::value), v_()
         {
 			T& field = mp_union<T>::get(v_);
 			new (&field) typename std::remove_reference<T>::type();
@@ -130,7 +130,7 @@ class variant {
 			new (&field) typename std::remove_reference<T>::type();
 
             field = std::move(t);
-            tag_ = tag<T>::value;
+            tag_ = tag< typename std::remove_reference<T>::type >::value;
             return *this;
         }
 
@@ -141,7 +141,7 @@ class variant {
 			new (&field) typename std::remove_reference<T>::type();
 
             field = t;
-            tag_ = tag<T>::value;
+            tag_ = tag< typename std::remove_reference<T>::type >::value;
             return *this;
         }
 
@@ -262,6 +262,7 @@ class variant {
                 if (n == 0) {
                     return vt(v.unsafe_get<typename n_to_type<0>::type>());
                 }
+				std::cout << n << ":" << v.tag_ << std::endl;
 				throw std::runtime_error("invalid visit");
             }
 
@@ -272,6 +273,7 @@ class variant {
                 if (n == 0) {
                     return vt(v.unsafe_get<typename n_to_type<0>::type>());
                 }
+				std::cout << n << ":" << v.tag_ << std::endl;
 				throw std::runtime_error("invalid visit");
             }
         };
@@ -341,8 +343,8 @@ class variant {
             throw std::bad_cast();
         }
 
-    protected:
-        size_t tag_;
+    public:
+        int tag_;
         typename union__::type v_;
 };
 

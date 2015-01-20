@@ -4,12 +4,21 @@
 # include <map>
 # include <string>
 # include <vector>
+# include <iomanip>
 # include <sstream>
+# include <iostream>
+# include <type_traits>
 
 # include "defines.hpp"
 # include "fct/variant.hpp"
+# include "exceptions.hpp"
 
 namespace lyza { namespace json {
+
+template <typename T>
+struct type_matcher {
+	typedef T type;
+};
 
 class value {
 	public:
@@ -42,10 +51,31 @@ class value {
 
 			ret_type operator()(double d) const
 			{
-				std::ostringstream ss;
+				std::stringstream ss;
 
-				ss << d;
-				return ss.str();
+				ss << std::fixed << d;
+				// FIXME, std::noshowpoints collide with std::fixed, so I do
+				// it by myself..
+
+				bool start = false;
+				bool only0 = true;
+
+				std::string bef;
+				std::string aft;
+
+				std::string* in_use = &bef;
+				for (auto c : ss.str()) {
+					if (c == '.') {
+						start = true;
+						in_use = &aft;
+					} else {
+						if (only0 && start && c != '0')
+							only0 = false;
+						*in_use += c;
+					}
+				}
+
+				return bef + (only0 ? "" : "." + aft);
 			}
 
 			ret_type operator()(std::string const& s) const
@@ -129,6 +159,18 @@ class value {
 		DEF_OP(string)
 		DEF_OP(object)
 
+		value& operator=(bool b)
+		{
+			var_ = b;
+			return *this;
+		}
+
+		value& operator=(size_t i)
+		{
+			var_ = static_cast<number>(i);
+			return *this;
+		}
+
 		value& operator=(int i)
 		{
 			var_ = static_cast<number>(i);
@@ -159,6 +201,42 @@ class value {
 			return *this;
 		}
 
+		operator object&()
+		{
+			if (var_.isa<object>()) {
+				return var_.get<object>();
+			}
+			std::cout << "object" << std::endl;
+			throw bad_cast(to_string(*this));
+		}
+
+		operator object const&() const
+		{
+			if (var_.isa<object>()) {
+				return var_.get<object>();
+			}
+			std::cout << "object" << std::endl;
+			throw bad_cast(to_string(*this));
+		}
+
+		operator array&()
+		{
+			if (var_.isa<array>()) {
+				return var_.get<array>();
+			}
+			std::cout << "array" << std::endl;
+			throw bad_cast(to_string(*this));
+		}
+
+		operator array const&() const
+		{
+			if (var_.isa<array>()) {
+				return var_.get<array>();
+			}
+			std::cout << "array" << std::endl;
+			throw bad_cast(to_string(*this));
+		}
+
 	private:
 		static string_visitor& get_visitor()
 		{
@@ -176,6 +254,26 @@ class value {
 		static std::string to_string(T const& v)
 		{
 			return get_visitor()(v);
+		}
+
+	public:
+		template <typename T>
+		bool isa() const
+		{
+			return var_.isa<T>();
+		}
+
+	public:
+		template <typename T>
+		T& get()
+		{
+			return static_cast<T&>(var_.get<typename type_matcher<T>::type>());
+		}
+
+		template <typename T>
+		const T& get() const
+		{
+			return static_cast<const T&>(var_.get<typename type_matcher<T>::type>());
 		}
 
 	public:
@@ -208,7 +306,7 @@ class value {
 			> t;
 # endif
 
-	private:
+	public:
 		t var_;
 };
 
@@ -218,6 +316,16 @@ typedef value::string string;
 typedef value::number number;
 typedef value::array array;
 typedef value::null null;
+
+template <>
+struct type_matcher<int> {
+	typedef number type;
+};
+
+template <>
+struct type_matcher<float> {
+	typedef number type;
+};
 
 }}
 

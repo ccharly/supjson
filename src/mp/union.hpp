@@ -1,7 +1,7 @@
 #ifndef LYZA_MP_UNION__
 # define LYZA_MP_UNION__
 
-# include "defines.hpp"
+# include "../defines.hpp"
 # include "tlist.hpp"
 
 namespace lyza { namespace mp {
