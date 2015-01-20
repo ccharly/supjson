@@ -30,230 +30,71 @@ class value {
 		typedef std::map<std::string, value> object;
 
 	public:
-		value()
-			: var_(null())
-		{
-		}
+		value(); // by default the value is null
 
 	private:
-		struct string_visitor {
-			typedef std::string ret_type;
+		class string_visitor {
+            public:
+                typedef std::string ret_type;
 
-			ret_type operator()(null) const
-			{
-				return "null";
-			}
-
-			ret_type operator()(bool b) const
-			{
-				return b ? "true" : "false";
-			}
-
-			ret_type operator()(double d) const
-			{
-				std::stringstream ss;
-
-				ss << std::fixed << d;
-				// FIXME, std::noshowpoints collide with std::fixed, so I do
-				// it by myself..
-
-				bool start = false;
-				bool only0 = true;
-
-				std::string bef;
-				std::string aft;
-
-				std::string* in_use = &bef;
-				for (auto c : ss.str()) {
-					if (c == '.') {
-						start = true;
-						in_use = &aft;
-					} else {
-						if (only0 && start && c != '0')
-							only0 = false;
-						*in_use += c;
-					}
-				}
-
-				return bef + (only0 ? "" : "." + aft);
-			}
-
-			ret_type operator()(std::string const& s) const
-			{
-				return "\"" + s + "\"";
-			}
-
-			ret_type operator()(std::vector<value> const& v) const
-			{
-				bool first = true;
-				std::string acc;
-
-				acc += "[";
-				for (auto& it : v) {
-					if (!first)
-						acc += ",";
-					else
-						first = false;
-					acc += to_string(it);
-				}
-				acc += "]";
-
-				return acc;
-			}
-
-			ret_type operator()(std::map<std::string, value> const& m) const
-			{
-				bool first = true;
-				std::string acc;
-
-				acc += "{";
-				for (auto& it : m) {
-					if (!first)
-						acc += ",";
-					else
-						first = false;
-					acc += "\"" + it.first + "\"" + ":" + to_string(it.second);
-				}
-				acc += "}";
-
-				return acc;
-			}
+                ret_type operator()(null) const;
+                ret_type operator()(bool) const;
+                ret_type operator()(double) const;
+                ret_type operator()(string const&) const;
+                ret_type operator()(array const&) const;
+                ret_type operator()(object const&) const;
 		};
 
-	public:
-# define DEF_CTOR(T)\
-		value(T const& t) : var_(t) { }\
-		value(T&& t) : var_(std::move(t)) { }
-
-		DEF_CTOR(null)
-		DEF_CTOR(array)
-		DEF_CTOR(string)
-		DEF_CTOR(object)
-
-		value(int i) : var_(static_cast<number>(i)) { }
-		value(number d) : var_(d) { }
-		value(boolean b) : var_(b) { }
-
-		value(const char* s)
-			: var_(string(s))
-		{
-		}
-
-		value(value const& v)
-			: var_(v.var_)
-		{
-		}
-
-		value(value&& v)
-			: var_(std::move(v.var_))
-		{
-		}
+        static string_visitor visitor_;
 
 	public:
-# define DEF_OP(T)\
-		value& operator=(T const& t) { var_ = t; return *this; }\
-		value& operator=(T&& t) { var_ = std::move(t); return *this; }
+# define DECL_CTOR(T)\
+		value(T const& t);\
+		value(T&& t);
 
-		DEF_OP(null)
-		DEF_OP(array)
-		DEF_OP(string)
-		DEF_OP(object)
+		DECL_CTOR(null)
+		DECL_CTOR(array)
+		DECL_CTOR(string)
+		DECL_CTOR(object)
 
-		value& operator=(bool b)
-		{
-			var_ = b;
-			return *this;
-		}
+		value(int i);
+		value(number d);
+		value(boolean b);
+		value(const char* s);
 
-		value& operator=(size_t i)
-		{
-			var_ = static_cast<number>(i);
-			return *this;
-		}
-
-		value& operator=(int i)
-		{
-			var_ = static_cast<number>(i);
-			return *this;
-		}
-
-		value& operator=(number d)
-		{
-			var_ = d;
-			return *this;
-		}
-
-		value& operator=(const char* s)
-		{
-			var_ = string(s);
-			return *this;
-		}
-
-		value& operator=(value const& v)
-		{
-			var_ = v.var_;
-			return *this;
-		}
-
-		value& operator=(value&& v)
-		{
-			var_ = std::move(v.var_);
-			return *this;
-		}
-
-		operator object&()
-		{
-			if (var_.isa<object>()) {
-				return var_.get<object>();
-			}
-			std::cout << "object" << std::endl;
-			throw bad_cast(to_string(*this));
-		}
-
-		operator object const&() const
-		{
-			if (var_.isa<object>()) {
-				return var_.get<object>();
-			}
-			std::cout << "object" << std::endl;
-			throw bad_cast(to_string(*this));
-		}
-
-		operator array&()
-		{
-			if (var_.isa<array>()) {
-				return var_.get<array>();
-			}
-			std::cout << "array" << std::endl;
-			throw bad_cast(to_string(*this));
-		}
-
-		operator array const&() const
-		{
-			if (var_.isa<array>()) {
-				return var_.get<array>();
-			}
-			std::cout << "array" << std::endl;
-			throw bad_cast(to_string(*this));
-		}
-
-	private:
-		static string_visitor& get_visitor()
-		{
-			static string_visitor v;
-			return v;
-		}
+		value(value const& v);
+		value(value&& v);
 
 	public:
-		static std::string to_string(value const& v)
-		{
-			return v.var_.apply_visitor(get_visitor());
-		}
+# define DECL_OP(T)\
+		value& operator=(T const& t);\
+		value& operator=(T&& t);
+
+		DECL_OP(null)
+		DECL_OP(array)
+		DECL_OP(string)
+		DECL_OP(object)
+
+		value& operator=(bool b);
+		value& operator=(size_t i);
+		value& operator=(int i);
+		value& operator=(number d);
+		value& operator=(const char* s);
+		value& operator=(value const& v);
+		value& operator=(value&& v);
+
+		operator object&();
+		operator object const&() const;
+		operator array&();
+		operator array const&() const;
+
+	public:
+		static std::string to_string(value const& v);
 
 		template <typename T>
 		static std::string to_string(T const& v)
 		{
-			return get_visitor()(v);
+			return visitor_(v);
 		}
 
 	public:
@@ -329,4 +170,4 @@ struct type_matcher<float> {
 
 }}
 
-#endif
+ #endif
