@@ -2,25 +2,19 @@
 ## lyza.Makefile
 
 # Sources
-SRCS=$(wildcard src/*.cpp)
+SRCS=$(wildcard *.cpp)
 
 # Dependencies and object files
 OBJS=$(addprefix ${BUILD_DIR}/,$(patsubst %.cpp,%.o,$(SRCS)))
 DEPS=$(addprefix ${BUILD_DIR}/,$(patsubst %.cpp,%.d,$(SRCS)))
 
-# Library setup
-AR=ar
-LIB_DYN_FLAGS=-shared -fPIC
-LIB_PREFIX=lib
-LIB_DIR=lib
-
-# Unit tests / Samples
-SAMPLE_DIR=samples
-
 # Compiler setup
 CXX=clang++
 CXX_FLAGS=-std=c++11 -Wall -W
-INC_FLAGS=-I src/
+INC_FLAGS=-I ./ -I ../../src/
+
+# Libs
+LIB_DIR=../../lib/
 
 # DO NOT EDIT
 CXX_FLAGS+=$(INC_FLAGS)
@@ -34,24 +28,11 @@ BUILD_DIR=.build
 # The name of your program
 # If you want to use the name of your git project use:
 #   $(shell basename `git rev-parse --show-toplevel`)
-BIN_NAME=$(shell basename `git rev-parse --show-toplevel`)
+BIN_NAME=from_file
 
 # Top level rule
-#$(BIN_NAME): .depend $(LIB_DIR)/$(LIB_PREFIX)$(BIN_NAME).a $(LIB_DIR)/$(LIB_PREFIX)$(BIN_NAME).so
-$(BIN_NAME): .depend $(LIB_DIR)/$(LIB_PREFIX)$(BIN_NAME).a
-
-$(LIB_DIR):
-	@mkdir -p $@
-
-$(LIB_DIR)/$(LIB_PREFIX)$(BIN_NAME).a: $(LIB_DIR) $(OBJS)
-	$(AR) rvs $@ $(OBJS)
-
-$(LIB_DIR)/$(LIB_PREFIX)$(BIN_NAME).so: $(LIB_DIR) $(OBJS)
-	$(CXX) $(LIB_DYN_FLAGS) $(OBJS) -o $@
-
-$(SAMPLE_DIR): $(BIN_NAME)
-	make -C $(SAMPLE_DIR)/from_string
-	make -C $(SAMPLE_DIR)/from_file
+$(BIN_NAME): .depend $(OBJS) $(LIB_DIR)/liblyza.json.a
+	$(CXX) -L$(LIB_DIR) -llyza.json $(OBJS) -o $(BIN_NAME)
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p `dirname $@`
@@ -70,7 +51,6 @@ include .depend
 endif
 
 clean:
-	rm -rf $(LIB_DIR)
 	rm -rf $(BUILD_DIR)
 	rm -rf $(BIN_NAME) .depend
 
