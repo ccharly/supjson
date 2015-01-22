@@ -11,22 +11,6 @@ namespace {
 
 namespace lyza { namespace json {
 
-parser::parse_error::parse_error(lj::producer& p, const string& what_arg)
-    : std::runtime_error("")
-{
-    std::stringstream ss;
-
-    ss << p.get_line() << ':' << p.get_column() << ": " << what_arg;
-    ss << "\n";
-
-    what_ = ss.str();
-}
-
-const char* parser::parse_error::what() const throw()
-{
-    return what_.c_str();
-}
-
 void parser::error(lj::producer& p, std::string const& msg)
 {
     std::string until_eof;
@@ -35,7 +19,7 @@ void parser::error(lj::producer& p, std::string const& msg)
         until_eof += p.nextc();
     }
 
-    throw parse_error(p, msg + "until_eof=\"" + until_eof + "\"");
+    throw parse_error(p.get_line(), p.get_column(), msg + " (until_eof=\"" + until_eof + "\")");
 }
 
 bool parser::has(lj::producer& p, char c)
@@ -67,7 +51,7 @@ void parser::expects(lj::producer& p, char c)
 {
     char cc = p.nextc();
     if (cc != c) {
-        throw parse_error(p,
+        throw parse_error(p.get_line(), p.get_column(),
                 std::string("parse error: ")
                 + "'" + std::string(c, 1) + "'"
                 + "(code=" + char_to_code(c) + ")"

@@ -15,15 +15,6 @@ namespace lyza { namespace json {
 namespace lj = lyza::json;
 
 class parser {
-	public:
-	    class parse_error : public std::runtime_error {
-	    	std::string what_;
-
-	    	public:
-                explicit parse_error(lj::producer& p, const string& what_arg);
-                virtual const char* what() const throw();
-	    };
-
 	private:
         static void error(lj::producer& p, std::string const& msg);
         static bool has(lj::producer& p, char c);

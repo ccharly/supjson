@@ -13,7 +13,7 @@ value const& get(object const& o, std::string const& key)
 	if (has(o, key)) {
 		return o.find(key)->second;
 	}
-	throw std::runtime_error("expecting the following key: " + key);
+	throw missing_key(key);
 }
 
 void merge(object& a, object& b)
