@@ -10,7 +10,7 @@
 # include <type_traits>
 
 # include "defines.hpp"
-# include "fct/variant.hpp"
+# include "variant.hpp"
 # include "exceptions.hpp"
 
 namespace lyza { namespace json {
@@ -31,6 +31,7 @@ class value {
 
 	public:
 		value(); // by default the value is null
+        ~value();
 
 	private:
 		class string_visitor {
@@ -118,34 +119,9 @@ class value {
 		}
 
 	public:
-# ifdef NO_VTEMPLATES
-		typedef
-			functional::variant<
-				mp::tlist< null,
-				mp::tlist< std::vector<value>,
-				mp::tlist< bool,
-				mp::tlist< std::string,
-				mp::tlist< number,
-				mp::tlist< std::map<std::string, value>,
-				mp::null
-					>
-					>
-					>
-					>
-					>
-					>
-			> t;
-# else
-		typedef
-			functional::variant<
-				null,
-				std::vector<value>,
-				bool,
-				std::string,
-				number,
-				std::map<std::string, value>
-			> t;
-# endif
+        typedef
+            variant< null, array, object >
+            t;
 
 	public:
 		t var_;

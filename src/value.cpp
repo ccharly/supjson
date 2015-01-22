@@ -89,9 +89,13 @@ value::value() : var_(value::null())
 {
 }
 
+value::~value()
+{
+}
+
 # define DEF_CTOR(T)\
     value::value(T const& t) : var_(t) { }\
-    value::value(T&& t) : var_(std::move(t)) { }
+    value::value(T&& t) : var_(std::forward<T>(t)) { }
 
 DEF_CTOR(value::null)
 DEF_CTOR(value::array)
@@ -102,14 +106,8 @@ value::value(int i) : var_(static_cast<number>(i)) { }
 value::value(number d) : var_(d) { }
 value::value(boolean b) : var_(b) { }
 value::value(const char* s) : var_(string(s)) { }
-
-value::value(value const& v) : var_(v.var_)
-{
-}
-
-value::value(value&& v) : var_(std::move(v.var_))
-{
-}
+value::value(value const& v) : var_(v.var_) { }
+value::value(value&& v) : var_(std::move(v.var_)) { }
 
 # define DEF_OP(T)\
     value& value::operator=(T const& t) { var_ = t; return *this; }\
@@ -167,7 +165,6 @@ value::operator object&()
     if (var_.isa<object>()) {
         return var_.get<object>();
     }
-    std::cout << "object" << std::endl;
     throw bad_cast(to_string(*this));
 }
 
@@ -176,7 +173,6 @@ value::operator object const&() const
     if (var_.isa<object>()) {
         return var_.get<object>();
     }
-    std::cout << "object" << std::endl;
     throw bad_cast(to_string(*this));
 }
 
@@ -185,7 +181,6 @@ value::operator array&()
     if (var_.isa<array>()) {
         return var_.get<array>();
     }
-    std::cout << "array" << std::endl;
     throw bad_cast(to_string(*this));
 }
 
@@ -194,7 +189,6 @@ value::operator array const&() const
     if (var_.isa<array>()) {
         return var_.get<array>();
     }
-    std::cout << "array" << std::endl;
     throw bad_cast(to_string(*this));
 }
 
