@@ -67,7 +67,6 @@ void parser::match_string(lj::producer&p, std::string const& s)
 
 lj::string parser::parse_string(lj::producer& p)
 {
-    //std::cout << "parse_string" << std::endl;
     std::string acc;
 
     expects(p, '"');
@@ -103,7 +102,6 @@ lj::boolean parser::parse_bool(lj::producer& p)
 
 lj::null parser::parse_null(lj::producer& p)
 {
-    //std::cout << "parse_null" << std::endl;
     if (has(p, 'n')) {
         match_string(p, "null");
     } else {
@@ -114,7 +112,6 @@ lj::null parser::parse_null(lj::producer& p)
 
 lj::array parser::parse_array(lj::producer& p)
 {
-    //std::cout << "parse_array" << std::endl;
     lj::array a;
 
     expects(p, '[');
@@ -139,7 +136,6 @@ lj::array parser::parse_array(lj::producer& p)
 
 lj::object parser::parse_object(lj::producer& p)
 {
-    //std::cout << "parse_object" << std::endl;
     lj::object o;
 
     expects(p, '{');
@@ -169,7 +165,6 @@ lj::object parser::parse_object(lj::producer& p)
 
 lj::number parser::parse_number(lj::producer& p)
 {
-    //std::cout << "parse_number" << std::endl;
     bool neg = false;
 
     if (has(p, '-')) {
@@ -231,7 +226,6 @@ lj::number parser::parse_number(lj::producer& p)
 
 lj::value parser::parse_value(lj::producer& p)
 {
-    //std::cout << "parse_value" << std::endl;
     lj::value val;
 
     if (has(p, '"')) {
