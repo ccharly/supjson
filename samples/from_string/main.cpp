@@ -1,7 +1,7 @@
 #include <iostream>
 #include "json.hpp"
 
-namespace lj = lyza::json;
+namespace sj = supjson;
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -11,10 +11,10 @@ int main(int argc, char **argv) {
 
     try {
         std::cout <<
-            lj::value::to_string(
-                    lj::parser::parse(lj::producer::from_string(argv[1])))
+            sj::value::to_string(
+                    sj::parser::parse(sj::producer::from_string(argv[1])))
             << std::endl;
-    } catch (lj::parse_error const& e) {
+    } catch (sj::parse_error const& e) {
         std::cerr << e.what() << std::endl;
     }
 

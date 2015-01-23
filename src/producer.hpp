@@ -1,5 +1,5 @@
-#ifndef LYZA_JSON_PRODUCER__
-# define LYZA_JSON_PRODUCER__
+#ifndef SUPJSON_JSON_PRODUCER__
+# define SUPJSON_JSON_PRODUCER__
 
 # include <istream>
 # include <sstream>
@@ -8,7 +8,7 @@
 
 # include "exceptions.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
     /* A producer produces input. You can either peek the current byte (NOTE:
      * this action won't move the cursor of the internal buffer) or you can
@@ -181,6 +181,6 @@ namespace lyza { namespace json {
 
     // Typedefs
     typedef basic_producer<char> producer;
-}}
+}
 
 #endif

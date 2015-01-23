@@ -1,11 +1,11 @@
-#ifndef LYZA_JSON_EXN__
-# define LYZA_JSON_EXN__
+#ifndef SUPJSON_JSON_EXN__
+# define SUPJSON_JSON_EXN__
 
 # include <string>
 # include <sstream>
 # include <stdexcept>
 
-namespace lyza { namespace json {
+namespace supjson {
 
 class parse_error : public std::runtime_error {
     std::string what_;
@@ -41,6 +41,6 @@ class end_of_file : public std::runtime_error {
 		end_of_file();
 };
 
-}}
+}
 
 #endif

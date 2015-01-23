@@ -1,7 +1,7 @@
 #include "helpers.hpp"
 #include "parser.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
 bool has(object const& o, std::string const& key)
 {
@@ -25,7 +25,7 @@ void merge(object& a, object& b)
 
 void merge(object& a, value& b)
 {
-	lj::object& bb = b;
+	supjson::object& bb = b;
 
 	for (auto& it : bb) {
 		a.insert(it);
@@ -37,4 +37,4 @@ object string_to_object(std::string const& js)
 	return parser::parse(producer::from_string(js));
 }
 
-}}
+}

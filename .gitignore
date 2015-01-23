@@ -26,7 +26,6 @@
 *.exe
 *.out
 *.app
-lyza.json
 samples/from_file/from_file
 samples/from_string/from_string
 

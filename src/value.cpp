@@ -1,6 +1,6 @@
 #include "value.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
 value::string_visitor value::visitor_;
 
@@ -197,4 +197,4 @@ std::string value::to_string(value const& v)
     return v.var_.apply_visitor(visitor_);
 }
 
-}}
+}

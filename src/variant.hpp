@@ -1,12 +1,12 @@
-#ifndef LYZA_JSON_VARIANT__
-# define LYZA_JSON_VARIANT__
+#ifndef SUPJSON_JSON_VARIANT__
+# define SUPJSON_JSON_VARIANT__
 
 # include <string>
 # include <utility>
 # include <iostream>
 # include "exceptions.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
 template <typename Tnull, typename Tarray, typename Tobject>
 class variant {
@@ -278,6 +278,6 @@ class variant {
 
 };
 
-}}
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "exceptions.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
 parse_error::parse_error(size_t line, size_t column, const std::string& what_arg)
     : std::runtime_error("") {
@@ -40,4 +40,4 @@ end_of_file::end_of_file()
     : std::runtime_error("eof") {
 }
 
-}}
+}

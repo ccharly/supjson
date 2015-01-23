@@ -1,7 +1,7 @@
 #include <iostream>
 #include "json.hpp"
 
-namespace lj = lyza::json;
+namespace sj = supjson;
 
 int main(int argc, char **argv)
 {
@@ -10,7 +10,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-	lj::producer p = lj::producer::from_file(argv[1]);
+	sj::producer p = sj::producer::from_file(argv[1]);
 
 	if (!p.good()) {
         std::cerr << "error while opening " << argv[1] << std::endl;
@@ -19,10 +19,10 @@ int main(int argc, char **argv)
 
     try {
         std::cout <<
-            lj::value::to_string(
-                    lj::parser::parse(p))
+            sj::value::to_string(
+                    sj::parser::parse(p))
             << std::endl;
-    } catch (lj::parse_error const& e) {
+    } catch (sj::parse_error const& e) {
         std::cerr << e.what() << std::endl;
     }
 

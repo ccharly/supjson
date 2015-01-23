@@ -1,5 +1,5 @@
-#ifndef LYZA_JSON_VALUE__
-# define LYZA_JSON_VALUE__
+#ifndef SUPJSON_JSON_VALUE__
+# define SUPJSON_JSON_VALUE__
 
 # include <map>
 # include <string>
@@ -13,7 +13,7 @@
 # include "variant.hpp"
 # include "exceptions.hpp"
 
-namespace lyza { namespace json {
+namespace supjson {
 
 template <typename T>
 struct type_matcher {
@@ -144,6 +144,6 @@ struct type_matcher<float> {
 	typedef number type;
 };
 
-}}
+}
 
  #endif

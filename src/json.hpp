@@ -1,5 +1,5 @@
-#ifndef LYZA_JSON__
-# define LYZA_JSON__
+#ifndef SUPJSON_JSON__
+# define SUPJSON_JSON__
 
 # include "exceptions.hpp"
 # include "value.hpp"

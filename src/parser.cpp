@@ -9,9 +9,9 @@ namespace {
 	}
 }
 
-namespace lyza { namespace json {
+namespace supjson {
 
-void parser::error(lj::producer& p, std::string const& msg)
+void parser::error(supjson::producer& p, std::string const& msg)
 {
     std::string until_eof;
 
@@ -22,12 +22,12 @@ void parser::error(lj::producer& p, std::string const& msg)
     throw parse_error(p.get_line(), p.get_column(), msg + " (until_eof=\"" + until_eof + "\")");
 }
 
-bool parser::has(lj::producer& p, char c)
+bool parser::has(supjson::producer& p, char c)
 {
     return p.peekc() == c;
 }
 
-bool parser::may_have(lj::producer& p, char c)
+bool parser::may_have(supjson::producer& p, char c)
 {
     if (p.peekc() == c) {
         p.nextc();
@@ -44,7 +44,7 @@ std::string parser::char_to_code(char c)
     return ss.str();
 }
 
-void parser::expects(lj::producer& p, char c)
+void parser::expects(supjson::producer& p, char c)
 {
     char cc = p.nextc();
     if (cc != c) {
@@ -58,14 +58,14 @@ void parser::expects(lj::producer& p, char c)
     }
 }
 
-void parser::match_string(lj::producer&p, std::string const& s)
+void parser::match_string(supjson::producer&p, std::string const& s)
 {
     for (auto c : s) {
         expects(p, c);
     }
 }
 
-lj::string parser::parse_string(lj::producer& p)
+supjson::string parser::parse_string(supjson::producer& p)
 {
     std::string acc;
 
@@ -84,9 +84,9 @@ lj::string parser::parse_string(lj::producer& p)
     return acc;
 }
 
-lj::boolean parser::parse_bool(lj::producer& p)
+supjson::boolean parser::parse_bool(supjson::producer& p)
 {
-    lj::boolean b = false;
+    supjson::boolean b = false;
 
     if (has(p, 't')) {
         match_string(p, "true");
@@ -100,19 +100,19 @@ lj::boolean parser::parse_bool(lj::producer& p)
     return b;
 }
 
-lj::null parser::parse_null(lj::producer& p)
+supjson::null parser::parse_null(supjson::producer& p)
 {
     if (has(p, 'n')) {
         match_string(p, "null");
     } else {
         error(p, "expected null");
     }
-    return lj::null();
+    return supjson::null();
 }
 
-lj::array parser::parse_array(lj::producer& p)
+supjson::array parser::parse_array(supjson::producer& p)
 {
-    lj::array a;
+    supjson::array a;
 
     expects(p, '[');
     if (has(p, ']')) { // empty
@@ -134,9 +134,9 @@ lj::array parser::parse_array(lj::producer& p)
     return a;
 }
 
-lj::object parser::parse_object(lj::producer& p)
+supjson::object parser::parse_object(supjson::producer& p)
 {
-    lj::object o;
+    supjson::object o;
 
     expects(p, '{');
     if (has(p, '}')) { // empty
@@ -147,7 +147,7 @@ lj::object parser::parse_object(lj::producer& p)
     bool more = true;
     while (more) {
         if (has(p, '"')) {
-            lj::string key = parse_string(p);
+            supjson::string key = parse_string(p);
             expects(p, ':');
             o[key] = parse_value(p);
             if (has(p, ','))  {
@@ -163,7 +163,7 @@ lj::object parser::parse_object(lj::producer& p)
     return o;
 }
 
-lj::number parser::parse_number(lj::producer& p)
+supjson::number parser::parse_number(supjson::producer& p)
 {
     bool neg = false;
 
@@ -224,9 +224,9 @@ lj::number parser::parse_number(lj::producer& p)
     return neg ? -dnum : dnum;
 }
 
-lj::value parser::parse_value(lj::producer& p)
+supjson::value parser::parse_value(supjson::producer& p)
 {
-    lj::value val;
+    supjson::value val;
 
     if (has(p, '"')) {
         val = parse_string(p);
@@ -246,16 +246,16 @@ lj::value parser::parse_value(lj::producer& p)
     return val;
 }
 
-lj::value parser::parse(lj::producer& p)
+supjson::value parser::parse(supjson::producer& p)
 {
     p.skip_ws(true);
     return parse_value(p);
 }
 
-lj::value parser::parse(lj::producer&& p)
+supjson::value parser::parse(supjson::producer&& p)
 {
     p.skip_ws(true);
     return parse_value(p);
 }
 
-}}
+}

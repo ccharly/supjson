@@ -1,5 +1,5 @@
-#ifndef LYZA_JSON_PARSER__
-# define LYZA_JSON_PARSER__
+#ifndef SUPJSON_JSON_PARSER__
+# define SUPJSON_JSON_PARSER__
 
 # include <istream>
 # include <sstream>
@@ -10,32 +10,30 @@
 # include "producer.hpp"
 # include "value.hpp"
 
-namespace lyza { namespace json {
-
-namespace lj = lyza::json;
+namespace supjson {
 
 class parser {
 	private:
-        static void error(lj::producer& p, std::string const& msg);
-        static bool has(lj::producer& p, char c);
-        static bool may_have(lj::producer& p, char c);
+        static void error(supjson::producer& p, std::string const& msg);
+        static bool has(supjson::producer& p, char c);
+        static bool may_have(supjson::producer& p, char c);
         static std::string char_to_code(char c);
-        static void expects(lj::producer& p, char c);
-        static void match_string(lj::producer&p, std::string const& s);
+        static void expects(supjson::producer& p, char c);
+        static void match_string(supjson::producer&p, std::string const& s);
 
 	public:
-        static lj::string parse_string(lj::producer& p);
-        static lj::boolean parse_bool(lj::producer& p);
-        static lj::null parse_null(lj::producer& p);
-        static lj::array parse_array(lj::producer& p);
-        static lj::object parse_object(lj::producer& p);
-        static lj::number parse_number(lj::producer& p);
-        static lj::value parse_value(lj::producer& p);
-        static lj::value parse(lj::producer& p);
-        static lj::value parse(lj::producer&& p);
+        static supjson::string parse_string(supjson::producer& p);
+        static supjson::boolean parse_bool(supjson::producer& p);
+        static supjson::null parse_null(supjson::producer& p);
+        static supjson::array parse_array(supjson::producer& p);
+        static supjson::object parse_object(supjson::producer& p);
+        static supjson::number parse_number(supjson::producer& p);
+        static supjson::value parse_value(supjson::producer& p);
+        static supjson::value parse(supjson::producer& p);
+        static supjson::value parse(supjson::producer&& p);
 
 };
 
-}}
+}
 
 #endif

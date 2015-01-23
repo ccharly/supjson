@@ -1,5 +1,5 @@
-#ifndef LYZA_DEFINES__
-# define LYZA_DEFINES__
+#ifndef SUPJSON_DEFINES__
+# define SUPJSON_DEFINES__
 
 # if (_MSC_VER <= 1800)
 #  define NO_VTEMPLATES
