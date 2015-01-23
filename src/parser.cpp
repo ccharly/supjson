@@ -24,10 +24,7 @@ void parser::error(lj::producer& p, std::string const& msg)
 
 bool parser::has(lj::producer& p, char c)
 {
-    if (p.peekc() == c) {
-        return true;
-    }
-    return false;
+    return p.peekc() == c;
 }
 
 bool parser::may_have(lj::producer& p, char c)
