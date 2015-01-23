@@ -14,11 +14,11 @@ Here are the types defined by the library:
 // A little namespace alias
 namespace sj = supjson;
 
-lj::null;
-lj::array;
-lj::object;
-lj::number;
-lj::boolean;
+sj::null;
+sj::array;
+sj::object;
+sj::number;
+sj::boolean;
 
-lj::value; // is an opaque value that can be any type listed above
+sj::value; // is an opaque value that can be any type listed above
 ```
