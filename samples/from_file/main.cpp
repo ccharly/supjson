@@ -10,18 +10,21 @@ int main(int argc, char **argv)
         return 1;
     }
 
-	//lj::producer p = lj::producer::from_string("{\"A\":1}");
 	lj::producer p = lj::producer::from_file(argv[1]);
 
 	if (!p.good()) {
+        std::cerr << "error while opening " << argv[1] << std::endl;
 		return 1;
 	}
 
-	lj::value val = lj::parser::parse(p);
-    std::cout << "parsed" << std::endl;
-	//lj::object val = lj::parser::parse(p);
-
-	std::cout << lj::value::to_string(val) << std::endl;
+    try {
+        std::cout <<
+            lj::value::to_string(
+                    lj::parser::parse(p))
+            << std::endl;
+    } catch (lj::parse_error const& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     return 0;
 }

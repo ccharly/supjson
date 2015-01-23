@@ -9,8 +9,14 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    lj::value val = lj::parser::parse(lj::producer::from_string(argv[1]));
-    std::cout << lj::value::to_string(val) << std::endl;
+    try {
+        std::cout <<
+            lj::value::to_string(
+                    lj::parser::parse(lj::producer::from_string(argv[1])))
+            << std::endl;
+    } catch (lj::parse_error const& e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     return 0;
 }
