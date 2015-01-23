@@ -31,8 +31,8 @@ class parser {
         static lj::object parse_object(lj::producer& p);
         static lj::number parse_number(lj::producer& p);
         static lj::value parse_value(lj::producer& p);
-        static lj::object parse(lj::producer& p);
-        static lj::object parse(lj::producer&& p);
+        static lj::value parse(lj::producer& p);
+        static lj::value parse(lj::producer&& p);
 
 };
 

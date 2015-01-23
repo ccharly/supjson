@@ -246,16 +246,16 @@ lj::value parser::parse_value(lj::producer& p)
     return val;
 }
 
-lj::object parser::parse(lj::producer& p)
+lj::value parser::parse(lj::producer& p)
 {
     p.skip_ws(true);
-    return parse_object(p);
+    return parse_value(p);
 }
 
-lj::object parser::parse(lj::producer&& p)
+lj::value parser::parse(lj::producer&& p)
 {
     p.skip_ws(true);
-    return parse_object(p);
+    return parse_value(p);
 }
 
 }}
